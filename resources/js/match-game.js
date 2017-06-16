@@ -88,7 +88,6 @@ MatchGame.flipCard = function($card, $game) {
   var nextMessage = "";
   var $score = $('#score');
   var $fathers = $('#fathers');
-  var $click = $('#click');
   var $otherCard;
   if ($card.data("flipped") || flips.length === 2) {
     return;
@@ -128,8 +127,12 @@ MatchGame.flipCard = function($card, $game) {
   }
   if (found === 8) {
     nextMessage += ", Dad!!!";
-    var $won = $("<p> + You have unlocked a message + </p>");
-    $click.append($won);
+    $score.css("background-color", "#ec407a");
+    $score.css("cursor", "pointer");
+    $score.text("You've unlocked a message!");
+    $score.click(function (){
+      alert("Thanks for passing down your killer brains and stunning good looks. I love you like alotalotlalotalot");
+    })
   }
   $fathers.text(nextMessage);
 };
@@ -146,9 +149,7 @@ MatchGame.unflip = function ($card) {
   $card.data("flipped", false);
 }
 
-MatchGame.alert = function () {
-  alert("")
-}
+
 
 MatchGame.matched = function($card) {
   $card.css("background-color", "rgb(153,153,153)");
