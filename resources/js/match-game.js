@@ -18,8 +18,23 @@ var MatchGame = {};
   Generates and returns an array of matching card values.
  */
  $(document).ready(function(){
-   MatchGame.renderCards(MatchGame.generateCardValues(), $('#game'));
+   var $game = $('#game');
+
+
+   MatchGame.start($game);
  });
+
+
+
+ MatchGame.start = function($game) {
+   var $score = $("#score");
+   $game.data("flippedCards", []);
+   $game.data("found", 0);
+   $game.data("moves", 0);
+
+   $score.text("You found 0 pairs in 0 moves");
+   MatchGame.renderCards(MatchGame.generateCardValues(), $game);
+ }
 
 
 MatchGame.generateCardValues = function () {
@@ -43,7 +58,7 @@ MatchGame.generateCardValues = function () {
 */
 
 MatchGame.renderCards = function(cardValues, $game) {
-  $game.data("flippedCards", []);
+
   var colors =
   ['hsl(25, 85%, 65%)','hsl(55, 85%, 65%)','hsl(90, 85%, 65%)','hsl(160, 85%, 65%)','hsl(220, 85%, 65%)','hsl(265, 85%, 65%)','hsl(310, 85%, 65%)','hsl(360, 85%, 65%)'];
   $game.empty();
@@ -67,6 +82,12 @@ MatchGame.renderCards = function(cardValues, $game) {
 
 MatchGame.flipCard = function($card, $game) {
   var flips = $game.data("flippedCards");
+  var moves = $game.data("moves");
+  var found = $game.data("found");
+  var message = "";
+  var nextMessage = "";
+  var $score = $('#score');
+  var $fathers = $('#fathers');
   var $otherCard;
   if ($card.data("flipped") || flips.length === 2) {
     return;
@@ -75,9 +96,13 @@ MatchGame.flipCard = function($card, $game) {
     flips.push($card);
   }
   if (flips.length === 2) {
+    moves++;
+    $game.data('moves', moves);
     $otherCard = flips[0];
 
     if($card.data("value") === $otherCard.data("value")){
+      found++
+      $game.data("found", found);
       MatchGame.matched($card);
       MatchGame.matched($otherCard);
 
@@ -87,8 +112,24 @@ MatchGame.flipCard = function($card, $game) {
         MatchGame.unflip($otherCard);
       }, 500);
     }
+    message = "You found " + found + " pairs in " + moves + " moves";
+    $score.text(message);
     $game.data("flippedCards", []);
   }
+  if(found >= 2) {
+    nextMessage += "Happy";
+  }
+  if(found >= 4) {
+    nextMessage += " Father's";
+  }
+  if(found >= 6) {
+    nextMessage += " Day";
+  }
+  if (found === 8) {
+    nextMessage += ", Dad!!!";
+    
+  }
+  $fathers.text(nextMessage);
 };
 
 MatchGame.flip = function ($card) {
