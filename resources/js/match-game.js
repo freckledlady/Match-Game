@@ -88,6 +88,7 @@ MatchGame.flipCard = function($card, $game) {
   var nextMessage = "";
   var $score = $('#score');
   var $fathers = $('#fathers');
+  var $click = $('#click');
   var $otherCard;
   if ($card.data("flipped") || flips.length === 2) {
     return;
@@ -127,7 +128,8 @@ MatchGame.flipCard = function($card, $game) {
   }
   if (found === 8) {
     nextMessage += ", Dad!!!";
-    
+    var $won = $("<p> + You have unlocked a message + </p>");
+    $click.append($won);
   }
   $fathers.text(nextMessage);
 };
@@ -142,6 +144,10 @@ MatchGame.unflip = function ($card) {
   $card.css("background-color", "rgb(32,64,86)");
   $card.empty();
   $card.data("flipped", false);
+}
+
+MatchGame.alert = function () {
+  alert("")
 }
 
 MatchGame.matched = function($card) {
